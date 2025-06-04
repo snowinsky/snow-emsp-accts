@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.snow.emsp.accts.persistence.mapper.AccountMapper">
+    <insert id="insert" parameterType="cn.snow.emsp.accts.persistence.model.DbAccount"
+            useGeneratedKeys="true" keyProperty="account.id">
+        INSERT INTO t_account (
+        email
+        contract_id
+        status
+        create_at
+        last_updated)
+        VALUES (#{account.email}, #{account.contractId}, #{account.status}, #{account.createAt},
+        #{account.lastUpdated})
+    </insert>
+    <update id="updateStatus">
+        update t_account
+        set status = #{account.status},
+        last_updated = #{account.lastUpdated}
+        where id = #{account.id} and vers = #{oldVersion}
+    </update>
+    <select id="selectByEmail" resultType="cn.snow.emsp.accts.persistence.model.DbAccount">
+        select id, email, contract_id as contractId, status, create_at as createAt, last_updated as lastUpdated, vers
+        from t_account
+        where email = #{email} limit 1
+    </select>
+</mapper>

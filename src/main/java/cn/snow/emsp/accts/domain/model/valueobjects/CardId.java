@@ -12,4 +12,8 @@ public class CardId {
         this.id = IdUtil.getSnowflakeNextId();
     }
 
+    public CardId(Long id) {
+        this.id = id;
+    }
+
 }

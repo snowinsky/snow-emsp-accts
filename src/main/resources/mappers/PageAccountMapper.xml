@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.snow.emsp.accts.persistence.mapper.PageAccountMapper">
+
+    private Long accountId;
+    private String email;
+    private String contractId;
+    private Short accountStatus;
+    private LocalDateTime createAt;
+    private LocalDateTime lastUpdated;
+
+    private Long cardId;
+    private String rfidUid;
+    private String rfidVisibleNumber;
+    private Short cardStatus;
+
+    <select id="selectPageAccountCard" resultType="cn.snow.emsp.accts.persistence.model.DbAccountCard">
+        SELECT /*+ JOIN_ORDER(tmp, a, c) */
+            a.id as accountId,
+            a.email,
+            a.contract_id as contractId,
+            a.status as accountStatus,
+            a.create_at as createAt,
+            a.last_updated as lastUpdated,
+            c.id as cardId,
+            c.rfid_uid as rfidUid,
+            c.rfid_visible_number as rfidVisibleNumber,
+            c.status as cardStatus
+        FROM (
+            SELECT
+            a.id AS account_id,
+            c.id AS card_id
+            FROM t_account a
+            JOIN t_card c ON a.id = c.account_id
+            ORDER BY
+            a.last_updated DESC,
+            a.id DESC,
+            c.id DESC
+            LIMIT #{startRowNum}, #{pageSize}
+        ) tmp
+        JOIN t_account a ON tmp.account_id = a.id
+        JOIN t_card c ON tmp.card_id = c.id
+        ORDER BY
+            a.last_updated DESC,
+            a.id DESC,
+            c.id DESC
+    </select>
+</mapper>
