@@ -23,10 +23,12 @@ CREATE TABLE t_card (
 	rfid_visible_number varchar(100) NOT NULL COMMENT 'rfid visible number in the card',
 	contract_id varchar(100) COMMENT 'EMAID format',
 	account_id BIGINT UNSIGNED COMMENT 't_account.id',
+	account_email varchar(100) COMMENT 't_account.email',
 	status SMALLINT DEFAULT 0 NOT NULL COMMENT '0: created, 1: assigned, 2: actived, 3: deactived',
 	create_at DATETIME DEFAULT now() NOT NULL COMMENT 'create time',
 	last_updated DATETIME DEFAULT now() NOT NULL    COMMENT 'last update time',
-	CONSTRAINT t_card_pk PRIMARY KEY (id)
+	CONSTRAINT t_card_pk PRIMARY KEY (id),
+	CONSTRAINT t_card_unique UNIQUE KEY (rfid_visible_number)
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb4

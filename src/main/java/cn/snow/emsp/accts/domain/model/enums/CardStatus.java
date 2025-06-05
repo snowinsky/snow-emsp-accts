@@ -6,9 +6,9 @@ import lombok.Getter;
 public enum CardStatus {
 
     CREATED(0, "Created"),
-    ASSIGNED(2, "Assigned"),
-    ACTIVATED(1, "Activated"),
-    DEACTIVATED(-1, "Deactivated");
+    ASSIGNED(1, "Assigned"),
+    ACTIVATED(2, "Activated"),
+    DEACTIVATED(3, "Deactivated");
 
     private int code;
     private String desc;
@@ -16,5 +16,14 @@ public enum CardStatus {
     CardStatus(int code, String desc) {
         this.code = code;
         this.desc = desc;
+    }
+
+    public static CardStatus fromCode(int code) {
+        for (CardStatus status : CardStatus.values()) {
+            if (status.getCode() == code) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("Invalid CardStatus code: " + code);
     }
 }

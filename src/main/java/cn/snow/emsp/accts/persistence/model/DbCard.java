@@ -13,6 +13,7 @@ public class DbCard implements java.io.Serializable {
     private String rfidVisibleNumber;
     private String contractId;
     private Long accountId;
+    private String accountEmail;
     private Short status;
     private LocalDateTime createAt;
     private LocalDateTime lastUpdated;

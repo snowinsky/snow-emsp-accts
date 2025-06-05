@@ -23,3 +23,5 @@ INSERT INTO t_card (rfid_uid, rfid_visible_number, contract_id, account_id) VALU
 INSERT INTO t_card (rfid_uid, rfid_visible_number, contract_id, account_id) VALUES('12312323', '235364364643', 'CNABC123456789', 18);
 INSERT INTO t_card (rfid_uid, rfid_visible_number, contract_id, account_id) VALUES('12312324', '235364364643', 'CNABC123456789', 123);
 INSERT INTO t_card (rfid_uid, rfid_visible_number, contract_id, account_id) VALUES('12312325', '235364364643', 'CNABC123456789', 123);
+
+update t_card set account_email = (select email from t_account where t_account.id = t_card.account_id);

@@ -3,15 +3,16 @@ package cn.snow.emsp.accts.domain.model;
 import cn.snow.emsp.accts.domain.model.enums.AccountStatus;
 import cn.snow.emsp.accts.domain.model.valueobjects.AccountEmail;
 import cn.snow.emsp.accts.domain.model.valueobjects.ContractId;
-import cn.snow.emsp.accts.domain.service.events.AccountActiveEvent;
-import cn.snow.emsp.accts.domain.service.events.AccountDeactiveEvent;
-import cn.snow.emsp.accts.domain.service.events.eventbus.AcctsEventListener;
-import com.google.common.eventbus.EventBus;
+import cn.snow.emsp.accts.domain.model.valueobjects.Rfid;
+import cn.snow.emsp.accts.persistence.model.DbAccount;
+import cn.snow.emsp.accts.persistence.model.DbCard;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -23,9 +24,14 @@ public class Account {
     private final ContractId contractId;
     private final LocalDateTime createdAt;
     private final Set<Card> cards = new HashSet<>();
-    private final EventBus eventBus = AcctsEventListener.getEventBus();
     private AccountStatus status;
     private LocalDateTime lastUpdated;
+    @Setter
+    @Getter
+    private Integer version;
+    @Setter
+    @Getter
+    private Long accountId;
 
 
     public Account(AccountEmail email, ContractId contractId) {
@@ -42,7 +48,6 @@ public class Account {
         }
         this.status = AccountStatus.ACTIVATED;
         this.lastUpdated = LocalDateTime.now();
-        this.eventBus.post(new AccountActiveEvent(this));
     }
 
     public void deactivate() {
@@ -54,7 +59,6 @@ public class Account {
         }
         this.status = AccountStatus.DEACTIVATED;
         this.lastUpdated = LocalDateTime.now();
-        this.eventBus.post(new AccountDeactiveEvent(this));
     }
 
     public void assignCard(Card card) {
@@ -69,6 +73,20 @@ public class Account {
         this.lastUpdated = LocalDateTime.now();
     }
 
+    public Account loadFromDb(DbAccount dbAccount, List<DbCard> dbCards) {
+        this.accountId = dbAccount.getId();
+        this.version = dbAccount.getVers();
+        this.status = AccountStatus.fromCode(dbAccount.getStatus());
+        this.lastUpdated = dbAccount.getLastUpdated();
+        cards.clear();
+        for (DbCard dbCard : dbCards) {
+            Card card = new Card(new Rfid(dbCard.getRfidUid(), dbCard.getRfidVisibleNumber()));
+            card.loadFromDb(dbCard);
+            this.cards.add(card);
+        }
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -81,5 +99,6 @@ public class Account {
     public int hashCode() {
         return Objects.hashCode(email);
     }
+
 
 }

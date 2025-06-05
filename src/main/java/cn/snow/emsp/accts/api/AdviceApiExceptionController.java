@@ -73,7 +73,7 @@ public class AdviceApiExceptionController {
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = RuntimeException.class)
     public ResponseData<String> runtimeException(final RuntimeException e) {
-        log.warn("####<==channel pay API return failure message:{}", e.getMessage());
+        log.warn("####<==other exception type={} message:{}", e.getClass().getCanonicalName(), e.getMessage(), e);
         return ResponseData.bizfail("Internal server error:" + e.getMessage());
     }
 }

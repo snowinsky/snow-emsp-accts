@@ -1,6 +1,7 @@
 package cn.snow.emsp.accts.domain.model.valueobjects;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.regex.Pattern;
@@ -10,6 +11,8 @@ import java.util.regex.Pattern;
 public class AccountEmail {
 
     private final String value;
+    @Setter
+    private Long id;
 
     public AccountEmail(String email) {
         if (!isValidEmail(email)) {
@@ -23,7 +26,7 @@ public class AccountEmail {
     }
 
     private static final Pattern EMAIL_PATTERN =
-            Pattern.compile("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
+            Pattern.compile("^[a-zA-Z0-9_.-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$");
 
     public static boolean isValidEmail(String email) {
         return email != null && EMAIL_PATTERN.matcher(email).matches();

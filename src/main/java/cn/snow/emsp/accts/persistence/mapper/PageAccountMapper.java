@@ -1,8 +1,10 @@
 package cn.snow.emsp.accts.persistence.mapper;
 
 import cn.snow.emsp.accts.persistence.model.DbAccountCard;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -17,5 +19,12 @@ public interface PageAccountMapper {
      * @param pageSize
      * @return
      */
-    List<DbAccountCard> selectPageAccountCard(Integer startRowNum, Integer pageSize);
+    List<DbAccountCard> selectPageAccountCard(@Param("dateTimeAfter") LocalDateTime dateTimeAfter, @Param("startRowNum") Integer startRowNum, @Param("pageSize") Integer pageSize);
+
+    /**
+     * 分页查询需要知道总行数
+     * @param dateTimeAfter
+     * @return
+     */
+    int countPageAccountCard(@Param("dateTimeAfter") LocalDateTime dateTimeAfter);
 }

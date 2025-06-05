@@ -5,11 +5,7 @@ import cn.snow.emsp.accts.domain.model.valueobjects.AccountEmail;
 import cn.snow.emsp.accts.domain.model.valueobjects.CardId;
 import cn.snow.emsp.accts.domain.model.valueobjects.ContractId;
 import cn.snow.emsp.accts.domain.model.valueobjects.Rfid;
-import cn.snow.emsp.accts.domain.service.events.CardAssignEvent;
-import cn.snow.emsp.accts.domain.service.events.CardCreateEvent;
-import cn.snow.emsp.accts.domain.service.events.CardDeactiveEvent;
-import cn.snow.emsp.accts.domain.service.events.eventbus.AcctsEventListener;
-import com.google.common.eventbus.EventBus;
+import cn.snow.emsp.accts.persistence.model.DbCard;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,20 +16,20 @@ import java.util.Objects;
 public class Card {
     private final Rfid rfid;
     private final LocalDateTime createdAt;
-    private final EventBus eventBus = AcctsEventListener.getEventBus();
     @Setter
     private CardId cardId;
     private ContractId contractId;
     private AccountEmail accountEmail;
     private CardStatus status;
     private LocalDateTime lastUpdated;
+    @Getter
+    private Integer version;
 
     public Card(Rfid rfid) {
         this.rfid = rfid;
         this.status = CardStatus.CREATED;
         this.createdAt = LocalDateTime.now();
         this.lastUpdated = LocalDateTime.now();
-        eventBus.post(new CardCreateEvent(this));
     }
 
     public void assignTo(Account account) {
@@ -44,7 +40,6 @@ public class Card {
         this.accountEmail = account.getEmail();
         this.status = CardStatus.ASSIGNED;
         this.lastUpdated = LocalDateTime.now();
-        eventBus.post(new CardAssignEvent(this));
     }
 
     public void activate() {
@@ -53,7 +48,6 @@ public class Card {
         }
         this.status = CardStatus.ACTIVATED;
         this.lastUpdated = LocalDateTime.now();
-        this.eventBus.post(new CardAssignEvent(this));
     }
 
     public void deactivate() {
@@ -62,7 +56,16 @@ public class Card {
         }
         this.status = CardStatus.DEACTIVATED;
         this.lastUpdated = LocalDateTime.now();
-        this.eventBus.post(new CardDeactiveEvent(this));
+    }
+
+    public Card loadFromDb(DbCard dbCard){
+        this.cardId = new CardId(dbCard.getId());
+        this.contractId = new ContractId(dbCard.getContractId());
+        this.accountEmail = new AccountEmail(dbCard.getAccountEmail());
+        this.status = CardStatus.fromCode(dbCard.getStatus());
+        this.lastUpdated = dbCard.getLastUpdated();
+        this.version = dbCard.getVers();
+        return this;
     }
 
     @Override

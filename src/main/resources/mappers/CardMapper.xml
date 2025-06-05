@@ -16,16 +16,19 @@
         #{card.status}, #{card.createAt},
         #{account.lastUpdated})
     </insert>
-    <update id="updateStatus">
+    <update id="updateCard">
         update t_card
         set status = #{card.status},
-        last_updated = #{card.lastUpdated}
-        where id = #{card.id} and vers = #{oldVersion}
-    </update>
-    <update id="updateAccount">
-        update t_card
-        set account_id = COALESCE(#{card.accountId}, account_id),
-        contract_id = COALESCE(#{card.contractId}, contract_id),
+        vers = vers + 1,
+        <if test="card.accountId != null">
+            account_id = #{card.accountId},
+        </if>
+        <if test="card.contractId != null">
+            contract_id = #{card.contractId},
+        </if>
+        <if test="card.accountEmail != null">
+            account_email = #{card.accountEmail},
+        </if>
         last_updated = #{card.lastUpdated}
         where id = #{card.id} and vers = #{oldVersion}
     </update>
@@ -33,5 +36,10 @@
         select id, rfid_uid as rfidUid, rfid_visible_number as rfidVisibleNumber, contract_id as contractId, account_id as accountId, status, create_at as createAt, last_updated as lastUpdated, vers
         from t_card
         where id = #{cardId} limit 1
+    </select>
+    <select id="selectByAccountId" resultType="cn.snow.emsp.accts.persistence.model.DbCard">
+        select id, rfid_uid as rfidUid, rfid_visible_number as rfidVisibleNumber, contract_id as contractId, account_id as accountId, status, create_at as createAt, last_updated as lastUpdated, vers
+        from t_card
+        where account_id = #{accountId}
     </select>
 </mapper>

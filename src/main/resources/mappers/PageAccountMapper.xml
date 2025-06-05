@@ -3,18 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.snow.emsp.accts.persistence.mapper.PageAccountMapper">
 
-    private Long accountId;
-    private String email;
-    private String contractId;
-    private Short accountStatus;
-    private LocalDateTime createAt;
-    private LocalDateTime lastUpdated;
-
-    private Long cardId;
-    private String rfidUid;
-    private String rfidVisibleNumber;
-    private Short cardStatus;
-
     <select id="selectPageAccountCard" resultType="cn.snow.emsp.accts.persistence.model.DbAccountCard">
         SELECT /*+ JOIN_ORDER(tmp, a, c) */
             a.id as accountId,
@@ -33,6 +21,7 @@
             c.id AS card_id
             FROM t_account a
             JOIN t_card c ON a.id = c.account_id
+            WHERE a.last_updated >= #{dateTimeAfter}
             ORDER BY
             a.last_updated DESC,
             a.id DESC,
@@ -45,5 +34,12 @@
             a.last_updated DESC,
             a.id DESC,
             c.id DESC
+    </select>
+    <select id="countPageAccountCard" resultType="java.lang.Integer">
+        SELECT
+         count(*)
+        FROM t_account a
+        JOIN t_card c ON a.id = c.account_id
+        WHERE a.last_updated >= #{dateTimeAfter}
     </select>
 </mapper>

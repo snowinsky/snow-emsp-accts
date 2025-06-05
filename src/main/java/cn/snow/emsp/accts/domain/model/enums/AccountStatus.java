@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum AccountStatus {
     CREATED(0, "Created"),
     ACTIVATED(1, "Activated"),
-    DEACTIVATED(-1, "Deactivated");
+    DEACTIVATED(2, "Deactivated");
 
     private int code;
     /**
@@ -20,5 +20,15 @@ public enum AccountStatus {
         this.code = code;
         this.desc = desc;
     }
+
+    public static AccountStatus fromCode(int code) {
+        for (AccountStatus status : AccountStatus.values()) {
+            if (status.getCode() == code) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("Invalid AccountStatus code: " + code);
+    }
+
 
 }

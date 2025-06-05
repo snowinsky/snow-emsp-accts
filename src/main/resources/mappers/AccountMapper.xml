@@ -5,10 +5,10 @@
     <insert id="insert" parameterType="cn.snow.emsp.accts.persistence.model.DbAccount"
             useGeneratedKeys="true" keyProperty="account.id">
         INSERT INTO t_account (
-        email
-        contract_id
-        status
-        create_at
+        email,
+        contract_id,
+        status,
+        create_at,
         last_updated)
         VALUES (#{account.email}, #{account.contractId}, #{account.status}, #{account.createAt},
         #{account.lastUpdated})
@@ -16,6 +16,7 @@
     <update id="updateStatus">
         update t_account
         set status = #{account.status},
+        vers = vers + 1,
         last_updated = #{account.lastUpdated}
         where id = #{account.id} and vers = #{oldVersion}
     </update>

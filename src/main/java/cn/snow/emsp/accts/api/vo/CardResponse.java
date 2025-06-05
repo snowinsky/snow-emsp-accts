@@ -1,0 +1,25 @@
+package cn.snow.emsp.accts.api.vo;
+
+import cn.snow.emsp.accts.domain.model.Card;
+import lombok.Data;
+
+@Data
+public class CardResponse  implements java.io.Serializable{
+
+    private Long cardId;
+    private String cardMarkedVisibleNumber;
+    private String status;
+    private String contractId;
+    private String accountEmail;
+
+
+    public static CardResponse from(Card card) {
+        CardResponse cardResponse = new CardResponse();
+        cardResponse.setCardId(card.getCardId().getId());
+        cardResponse.setCardMarkedVisibleNumber(card.getRfid().getMarkedVisibleNumber());
+        cardResponse.setStatus(card.getStatus().getDesc());
+        cardResponse.setContractId(card.getContractId().getNormalizedValue());
+        cardResponse.setAccountEmail(card.getAccountEmail().getValue());
+        return cardResponse;
+    }
+}
