@@ -1,4 +1,4 @@
-package cn.snow.emsp.accts.service;
+package cn.snow.emsp.accts.service.impl;
 
 import cn.snow.emsp.accts.domain.model.Account;
 import cn.snow.emsp.accts.domain.model.Card;
@@ -12,6 +12,7 @@ import cn.snow.emsp.accts.domain.service.events.*;
 import cn.snow.emsp.accts.domain.service.events.eventbus.AccountCardEventPublisher;
 import cn.snow.emsp.accts.domain.service.repository.AccountRepository;
 import cn.snow.emsp.accts.persistence.model.DbAccountCard;
+import cn.snow.emsp.accts.service.AccountCardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -34,6 +35,9 @@ public class AccountCardServiceImpl implements AccountCardService {
     public Account createAccount(String email) {
         Account account = new Account(new AccountEmail(email),
                 new ContractId(emspContractIdService.generateContractId()));
+        if (accountRepository.findByEmail(email) != null) {
+            throw new IllegalArgumentException("account already exists by email: " + email);
+        }
         accountRepository.save(account);
         accountCardEventPublisher.publishEvent(new AccountCreatedEvent(account));
         return account;
@@ -67,6 +71,9 @@ public class AccountCardServiceImpl implements AccountCardService {
     @Transactional
     public Card createCard(String rfidUid, String rfidVisibleNumber) {
         Card card = new Card(new Rfid(rfidUid, rfidVisibleNumber));
+        if (accountRepository.findByRfidVisibleNumber(rfidVisibleNumber) != null) {
+            throw new IllegalArgumentException("card already exists by rfidVisibleNumber: " + card.getRfid().getVisibleNumber());
+        }
         accountRepository.save(card);
         accountCardEventPublisher.publishEvent(new CardCreateEvent(card));
         return card;
@@ -106,7 +113,7 @@ public class AccountCardServiceImpl implements AccountCardService {
             throw new IllegalArgumentException("account not found by email: " + email);
         }
         account.assignCard(card);
-        accountRepository.save(account);
+        accountRepository.save(card);
         accountCardEventPublisher.publishEvent(new CardAssignEvent(card));
         return account;
     }

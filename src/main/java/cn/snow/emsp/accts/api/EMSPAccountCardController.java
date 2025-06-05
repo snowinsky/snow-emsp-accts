@@ -45,7 +45,7 @@ public class EMSPAccountCardController {
         return ResponseEntity.ok(AccountResponse.from(account));
     }
 
-    @GetMapping(value = "/accounts?lastUpdatedAfter={lastUpdated}&page={page}&size={size}")
+    @GetMapping(value = "/accounts/list")
     public ResponseEntity<Page<PageAccountCard>> getAccountsByLastUpdated(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime lastUpdated,
             @RequestParam(defaultValue = "1") int page,
@@ -76,8 +76,8 @@ public class EMSPAccountCardController {
                 .body(CardResponse.from(card));
     }
 
-    @PutMapping(value = "/cards/{cardId}/assign?accountEmail={email}")
-    public ResponseEntity<AccountResponse> assignCardToAccount(@PathVariable String cardId, @PathVariable String email) {
+    @PutMapping(value = "/cards/{cardId}/assign")
+    public ResponseEntity<AccountResponse> assignCardToAccount(@PathVariable String cardId, @RequestParam String email) {
         Account account = accountCardService.assignCardToAccount(cardId, email);
         return ResponseEntity.ok(AccountResponse.from(account));
     }

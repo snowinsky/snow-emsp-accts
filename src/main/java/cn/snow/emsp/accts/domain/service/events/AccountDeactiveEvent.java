@@ -9,4 +9,9 @@ public class AccountDeactiveEvent {
     public AccountDeactiveEvent(Account account){
         this.account = account;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Account(email=%s) was deactivated on %s", account.getEmail(), account.getLastUpdated().toString() );
+    }
 }

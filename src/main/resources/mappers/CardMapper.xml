@@ -9,12 +9,13 @@
         rfid_visible_number,
         contract_id,
         account_id,
+        account_email,
         status,
         create_at,
         last_updated)
-        VALUES (#{card.rfidUid}, #{card.rfidVisibleNumber}, #{card.contractId}, #{card.accountId},
+        VALUES (#{card.rfidUid}, #{card.rfidVisibleNumber}, #{card.contractId}, #{card.accountId}, #{card.accountEmail},
         #{card.status}, #{card.createAt},
-        #{account.lastUpdated})
+        #{card.lastUpdated})
     </insert>
     <update id="updateCard">
         update t_card
@@ -33,13 +34,18 @@
         where id = #{card.id} and vers = #{oldVersion}
     </update>
     <select id="selectByCardId" resultType="cn.snow.emsp.accts.persistence.model.DbCard">
-        select id, rfid_uid as rfidUid, rfid_visible_number as rfidVisibleNumber, contract_id as contractId, account_id as accountId, status, create_at as createAt, last_updated as lastUpdated, vers
+        select id, rfid_uid as rfidUid, rfid_visible_number as rfidVisibleNumber, contract_id as contractId, account_id as accountId, account_email as accountEmail, status, create_at as createAt, last_updated as lastUpdated, vers
         from t_card
         where id = #{cardId} limit 1
     </select>
     <select id="selectByAccountId" resultType="cn.snow.emsp.accts.persistence.model.DbCard">
-        select id, rfid_uid as rfidUid, rfid_visible_number as rfidVisibleNumber, contract_id as contractId, account_id as accountId, status, create_at as createAt, last_updated as lastUpdated, vers
+        select id, rfid_uid as rfidUid, rfid_visible_number as rfidVisibleNumber, contract_id as contractId, account_id as accountId, account_email as accountEmail, status, create_at as createAt, last_updated as lastUpdated, vers
         from t_card
         where account_id = #{accountId}
+    </select>
+    <select id="selectByRfidVisibleNumber" resultType="cn.snow.emsp.accts.persistence.model.DbCard">
+        select id, rfid_uid as rfidUid, rfid_visible_number as rfidVisibleNumber, contract_id as contractId, account_id as accountId, account_email as accountEmail, status, create_at as createAt, last_updated as lastUpdated, vers
+        from t_card
+        where rfid_visible_number = #{rfidVisibleNumber} limit 1
     </select>
 </mapper>

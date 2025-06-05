@@ -9,4 +9,9 @@ public class AccountCreatedEvent {
     public AccountCreatedEvent(Account account){
         this.account = account;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Account(email=%s) was created on %s", account.getEmail(), account.getLastUpdated().toString() );
+    }
 }

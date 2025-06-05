@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 @Getter
 public class Card {
@@ -58,10 +59,14 @@ public class Card {
         this.lastUpdated = LocalDateTime.now();
     }
 
-    public Card loadFromDb(DbCard dbCard){
-        this.cardId = new CardId(dbCard.getId());
-        this.contractId = new ContractId(dbCard.getContractId());
-        this.accountEmail = new AccountEmail(dbCard.getAccountEmail());
+    public Card loadFromDb(DbCard dbCard) {
+        this.cardId = Optional.ofNullable(dbCard.getId()).map(CardId::new).orElse(null);
+        this.contractId = Optional.ofNullable(dbCard.getContractId()).map(ContractId::new).orElse(null);
+        this.accountEmail = Optional.ofNullable(dbCard.getAccountEmail()).map(a -> {
+            AccountEmail accountEmail = new AccountEmail(a);
+            accountEmail.setId(dbCard.getAccountId());
+            return accountEmail;
+        }).orElse(null);
         this.status = CardStatus.fromCode(dbCard.getStatus());
         this.lastUpdated = dbCard.getLastUpdated();
         this.version = dbCard.getVers();

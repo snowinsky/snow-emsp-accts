@@ -29,10 +29,6 @@ public class Account {
     @Setter
     @Getter
     private Integer version;
-    @Setter
-    @Getter
-    private Long accountId;
-
 
     public Account(AccountEmail email, ContractId contractId) {
         this.email = email;
@@ -74,7 +70,7 @@ public class Account {
     }
 
     public Account loadFromDb(DbAccount dbAccount, List<DbCard> dbCards) {
-        this.accountId = dbAccount.getId();
+        this.email.setId(dbAccount.getId());
         this.version = dbAccount.getVers();
         this.status = AccountStatus.fromCode(dbAccount.getStatus());
         this.lastUpdated = dbAccount.getLastUpdated();

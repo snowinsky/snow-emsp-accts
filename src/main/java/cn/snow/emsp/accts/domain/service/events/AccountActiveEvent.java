@@ -10,4 +10,8 @@ public class AccountActiveEvent {
         this.account = account;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Account(email=%s) was activated on %s", account.getEmail(), account.getLastUpdated().toString() );
+    }
 }

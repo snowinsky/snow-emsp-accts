@@ -9,4 +9,9 @@ public class CardDeactiveEvent {
     public CardDeactiveEvent(Card card) {
         this.card = card;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Card(number=%s) was deactivated on %s", card.getRfid().getVisibleNumber(), card.getLastUpdated() );
+    }
 }

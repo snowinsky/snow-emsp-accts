@@ -9,4 +9,9 @@ public class CardActiveEvent {
     public CardActiveEvent(Card card) {
         this.card = card;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Card(number=%s) was activated on %s", card.getRfid().getVisibleNumber(), card.getLastUpdated() );
+    }
 }

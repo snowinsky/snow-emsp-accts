@@ -1,4 +1,4 @@
-package cn.snow.emsp.accts.service;
+package cn.snow.emsp.accts.service.impl;
 
 import cn.snow.emsp.accts.domain.model.Account;
 import cn.snow.emsp.accts.domain.model.Card;
@@ -47,7 +47,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public Account save(Account account) {
-        Long accountId = account.getAccountId();
+        Long accountId = Optional.ofNullable(account).map(Account::getEmail).map(AccountEmail::getId).orElse(null);
         if (accountId == null) {
             DbAccount dbAccount = new DbAccount();
             dbAccount.setEmail(account.getEmail().getValue());
@@ -56,7 +56,7 @@ public class AccountRepositoryImpl implements AccountRepository {
             dbAccount.setLastUpdated(account.getLastUpdated());
             dbAccount.setStatus((short) account.getStatus().getCode());
             accountMapper.insert(dbAccount);
-            account.setAccountId(dbAccount.getId());
+            account.getEmail().setId(dbAccount.getId());
             return account;
         }
         Integer version = account.getVersion();
@@ -76,7 +76,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public Card save(Card card) {
-        Long cardId = Optional.ofNullable(card).map(Card::getCardId).map(CardId::getId).orElseThrow(() -> new IllegalArgumentException("cardId must not be null when update card"));
+        Long cardId = Optional.ofNullable(card).map(Card::getCardId).map(CardId::getId).orElse(null);
         if (cardId == null) {
             DbCard dbCard = new DbCard();
             dbCard.setRfidUid(card.getRfid().getUid());
@@ -84,9 +84,9 @@ public class AccountRepositoryImpl implements AccountRepository {
             dbCard.setCreateAt(card.getCreatedAt());
             dbCard.setLastUpdated(card.getLastUpdated());
             dbCard.setStatus((short) card.getStatus().getCode());
-            dbCard.setAccountId(card.getAccountEmail().getId());
-            dbCard.setContractId(card.getContractId().getValue());
-            dbCard.setAccountEmail(card.getAccountEmail().getValue());
+            dbCard.setAccountId(Optional.ofNullable(card.getAccountEmail()).map(AccountEmail::getId).orElse(null));
+            dbCard.setAccountEmail(Optional.ofNullable(card.getAccountEmail()).map(AccountEmail::getValue).orElse(null));
+            dbCard.setContractId(Optional.ofNullable(card.getContractId()).map(ContractId::getValue).orElse(null));
             cardMapper.insert(dbCard);
             card.setCardId(new CardId(dbCard.getId()));
             return card;
@@ -112,7 +112,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     @Override
     public Page<DbAccountCard> findByLastUpdatedAfter(LocalDateTime dateTimeAfter, int page, int size) {
         int totalCnt = pageAccountMapper.countPageAccountCard(dateTimeAfter);
-        int startRowNum = (page - 1) + size;
+        int startRowNum = (page - 1) * size;
         if (startRowNum >= totalCnt) {
             return Page.empty();
         }
@@ -124,6 +124,17 @@ public class AccountRepositoryImpl implements AccountRepository {
     @Override
     public Card findByCardId(String cardId) {
         DbCard dbCard = cardMapper.selectByCardId(Long.valueOf(cardId));
+        if (Objects.isNull(dbCard)) {
+            return null;
+        }
+        Card card = new Card(new Rfid(dbCard.getRfidUid(), dbCard.getRfidVisibleNumber()));
+        card.loadFromDb(dbCard);
+        return card;
+    }
+
+    @Override
+    public Card findByRfidVisibleNumber(String rfidVisibleNumber) {
+        DbCard dbCard = cardMapper.selectByRfidVisibleNumber(rfidVisibleNumber);
         if (Objects.isNull(dbCard)) {
             return null;
         }

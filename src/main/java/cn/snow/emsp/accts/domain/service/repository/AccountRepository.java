@@ -17,4 +17,6 @@ public interface AccountRepository {
     Page<DbAccountCard> findByLastUpdatedAfter(LocalDateTime localDateTime, int page, int size);
 
     Card findByCardId(String cardId);
+
+    Card findByRfidVisibleNumber(String rfidVisibleNumber);
 }

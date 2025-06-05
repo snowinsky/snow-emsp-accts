@@ -1,5 +1,5 @@
 -- emsp_accts.t_account definition
-
+drop table if exists t_account;
 CREATE TABLE t_account (
 	id BIGINT UNSIGNED auto_increment NOT NULL COMMENT 'primary key',
 	vers BIGINT UNSIGNED DEFAULT 0 NOT NULL COMMENT 'version of change',
@@ -15,7 +15,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb4
 COLLATE=utf8mb4_0900_ai_ci;
 
-
+drop table if exists t_card;
 CREATE TABLE t_card (
 	id BIGINT UNSIGNED auto_increment NOT NULL COMMENT 'primary key',
 	vers BIGINT UNSIGNED DEFAULT 0 NOT NULL COMMENT 'version of change',

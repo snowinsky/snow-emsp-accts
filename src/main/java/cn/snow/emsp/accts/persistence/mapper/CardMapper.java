@@ -15,4 +15,5 @@ public interface CardMapper {
 
     int updateCard(@Param("card") DbCard card, @Param("oldVersion") Integer oldVersion);
 
+    DbCard selectByRfidVisibleNumber(@Param("rfidVisibleNumber") String rfidVisibleNumber);
 }
