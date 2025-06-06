@@ -21,7 +21,6 @@ jobs:
 
     permissions:
       contents: read
-      dependency: write
       actions: read
       security-events: write
 
