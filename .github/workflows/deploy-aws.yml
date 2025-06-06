@@ -37,7 +37,7 @@ env:
   # ECS create cluster first, it is the cluster name
   ECS_CLUSTER: excited-hippopotamus-g6r6xf
   # in the ECS, 1 define a task to create container, it is the task name
-  CONTAINER_NAME: container-emsp-accts-1:1
+  CONTAINER_NAME: emsp-accts-001
   # in the ECS, 2 define a task to create container, it is the task snapshot json file
   ECS_TASK_DEFINITION: .aws/ecs/container-emsp-accts-1-revision1.json
   # in the ECS  3 after define the task, then run it to create new container, it is the container name
