@@ -1,38 +1,444 @@
-# snow-emsp-accts
-emsp account and card service
+# eMSP Account and Card Service
 
-# Getting Started
+> eMSP Account and Card Service
+> A sample project for interview
+> 
 
-### Reference Documentation
-For further reference, please consider the following sections:
+### Getting Started
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.7.6/maven-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.7.6/maven-plugin/reference/html/#build-image)
-* [Spring Web](https://docs.spring.io/spring-boot/docs/2.7.6/reference/htmlsingle/#web)
-* [Rest Repositories](https://docs.spring.io/spring-boot/docs/2.7.6/reference/htmlsingle/#howto.data-access.exposing-spring-data-repositories-as-rest)
-* [Spring Security](https://docs.spring.io/spring-boot/docs/2.7.6/reference/htmlsingle/#web.security)
-* [MyBatis Framework](https://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/)
-* [Validation](https://docs.spring.io/spring-boot/docs/2.7.6/reference/htmlsingle/#io.validation)
-* [Spring cache abstraction](https://docs.spring.io/spring-boot/docs/2.7.6/reference/htmlsingle/#io.caching)
-* [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/2.7.6/reference/htmlsingle/#actuator)
+It is a spring-boot application with the RESTFull API.
 
-### Guides
-The following guides illustrate how to use some features concretely:
 
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
-* [Accessing JPA Data with REST](https://spring.io/guides/gs/accessing-data-rest/)
-* [Accessing Neo4j Data with REST](https://spring.io/guides/gs/accessing-neo4j-data-rest/)
-* [Accessing MongoDB Data with REST](https://spring.io/guides/gs/accessing-mongodb-data-rest/)
-* [Securing a Web Application](https://spring.io/guides/gs/securing-web/)
-* [Spring Boot and OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)
-* [Authenticating a User with LDAP](https://spring.io/guides/gs/authenticating-ldap/)
-* [MyBatis Quick Start](https://github.com/mybatis/spring-boot-starter/wiki/Quick-Start)
-* [Accessing data with MySQL](https://spring.io/guides/gs/accessing-data-mysql/)
-* [Validation](https://spring.io/guides/gs/validating-form-input/)
-* [Caching Data with Spring](https://spring.io/guides/gs/caching/)
-* [Building a RESTful Web Service with Spring Boot Actuator](https://spring.io/guides/gs/actuator-service/)
+#### github 
+  https://github.com/snowinsky/snow-emsp-accts.git
+#### AWS
+- health check
+  http://13.48.134.74:8080/health
+- swagger
+  http://13.48.134.74:8080/swagger-ui/index.html
+- mysql emsp-accts.c1ucqq8ik15m.eu-north-1.rds.amazonaws.com:3306/emsp-accts
+  - username: rootmysql
+  - password: Root-mysql
+
+
+## API Document
+
+# EMSPAccountCardController
+
+EMSPAccountCardController
+
+
+---
+## createAccount
+
+> BASIC
+
+**Path:** /v1/accounts
+
+**Method:** POST
+
+> REQUEST
+
+**Headers:**
+
+| name | value | required | desc |
+| ------------ | ------------ | ------------ | ------------ |
+| Content-Type | application/json | YES |  |
+
+**Request Body:**
+
+| name | type | desc |
+| ------------ | ------------ | ------------ |
+| email | string |  |
+
+**Request Demo:**
+
+```json
+{
+  "email": ""
+}
+```
+
+
+
+> RESPONSE
+
+**Headers:**
+
+| name | value | required | desc |
+| ------------ | ------------ | ------------ | ------------ |
+| content-type | application/json;charset=UTF-8 | NO |  |
+
+**Body:**
+
+| name | type | desc |
+| ------------ | ------------ | ------------ |
+| accountEmail | string |  |
+| accountStatus | string |  |
+| contractId | string |  |
+| cards | array |  |
+| &ensp;&ensp;&#124;─ | object |  |
+| &ensp;&ensp;&ensp;&ensp;&#124;─cardId | integer |  |
+| &ensp;&ensp;&ensp;&ensp;&#124;─cardMarkedVisibleNumber | string |  |
+| &ensp;&ensp;&ensp;&ensp;&#124;─status | string |  |
+| &ensp;&ensp;&ensp;&ensp;&#124;─contractId | string |  |
+| &ensp;&ensp;&ensp;&ensp;&#124;─accountEmail | string |  |
+
+**Response Demo:**
+
+```json
+{
+  "accountEmail": "",
+  "accountStatus": "",
+  "contractId": "",
+  "cards": [
+    {
+      "cardId": 0,
+      "cardMarkedVisibleNumber": "",
+      "status": "",
+      "contractId": "",
+      "accountEmail": ""
+    }
+  ]
+}
+```
+
+
+
+
+---
+## changeAccountStatus
+
+> BASIC
+
+**Path:** /v1/accounts/{email}/status
+
+**Method:** PATCH
+
+> REQUEST
+
+**Path Params:**
+
+| name | value | desc |
+| ------------ | ------------ | ------------ |
+| email |  |  |
+
+**Headers:**
+
+| name | value | required | desc |
+| ------------ | ------------ | ------------ | ------------ |
+| Content-Type | application/json | YES |  |
+
+**Request Body:**
+
+| name | type | desc |
+| ------------ | ------------ | ------------ |
+| accountStatus | string |  |
+
+**Request Demo:**
+
+```json
+{
+  "accountStatus": ""
+}
+```
+
+
+
+> RESPONSE
+
+**Headers:**
+
+| name | value | required | desc |
+| ------------ | ------------ | ------------ | ------------ |
+| content-type | application/json;charset=UTF-8 | NO |  |
+
+**Body:**
+
+| name | type | desc |
+| ------------ | ------------ | ------------ |
+| accountEmail | string |  |
+| accountStatus | string |  |
+| contractId | string |  |
+| cards | array |  |
+| &ensp;&ensp;&#124;─ | object |  |
+| &ensp;&ensp;&ensp;&ensp;&#124;─cardId | integer |  |
+| &ensp;&ensp;&ensp;&ensp;&#124;─cardMarkedVisibleNumber | string |  |
+| &ensp;&ensp;&ensp;&ensp;&#124;─status | string |  |
+| &ensp;&ensp;&ensp;&ensp;&#124;─contractId | string |  |
+| &ensp;&ensp;&ensp;&ensp;&#124;─accountEmail | string |  |
+
+**Response Demo:**
+
+```json
+{
+  "accountEmail": "",
+  "accountStatus": "",
+  "contractId": "",
+  "cards": [
+    {
+      "cardId": 0,
+      "cardMarkedVisibleNumber": "",
+      "status": "",
+      "contractId": "",
+      "accountEmail": ""
+    }
+  ]
+}
+```
+
+
+
+
+---
+## getAccountsByLastUpdated
+
+> BASIC
+
+**Path:** /v1/accounts/list
+
+**Method:** GET
+
+> REQUEST
+
+**Query:**
+
+| name | value | required | desc |
+| ------------ | ------------ | ------------ | ------------ |
+| lastUpdated |  | YES |  |
+| page | 1 | YES |  |
+| size | 10 | YES |  |
+
+
+
+> RESPONSE
+
+**Headers:**
+
+| name | value | required | desc |
+| ------------ | ------------ | ------------ | ------------ |
+| content-type | application/json;charset=UTF-8 | NO |  |
+
+**Body:**
+
+| name | type | desc |
+| ------------ | ------------ | ------------ |
+
+**Response Demo:**
+
+```json
+{}
+```
+
+
+
+
+---
+## createCards
+
+> BASIC
+
+**Path:** /v1/cards
+
+**Method:** POST
+
+> REQUEST
+
+**Headers:**
+
+| name | value | required | desc |
+| ------------ | ------------ | ------------ | ------------ |
+| Content-Type | application/json | YES |  |
+
+**Request Body:**
+
+| name | type | desc |
+| ------------ | ------------ | ------------ |
+| rfidUid | string |  |
+| rfidVisibleNumber | string |  |
+
+**Request Demo:**
+
+```json
+{
+  "rfidUid": "",
+  "rfidVisibleNumber": ""
+}
+```
+
+
+
+> RESPONSE
+
+**Headers:**
+
+| name | value | required | desc |
+| ------------ | ------------ | ------------ | ------------ |
+| content-type | application/json;charset=UTF-8 | NO |  |
+
+**Body:**
+
+| name | type | desc |
+| ------------ | ------------ | ------------ |
+| cardId | integer |  |
+| cardMarkedVisibleNumber | string |  |
+| status | string |  |
+| contractId | string |  |
+| accountEmail | string |  |
+
+**Response Demo:**
+
+```json
+{
+  "cardId": 0,
+  "cardMarkedVisibleNumber": "",
+  "status": "",
+  "contractId": "",
+  "accountEmail": ""
+}
+```
+
+
+
+
+---
+## assignCardToAccount
+
+> BASIC
+
+**Path:** /v1/cards/{cardId}/assign
+
+**Method:** PUT
+
+> REQUEST
+
+**Path Params:**
+
+| name | value | desc |
+| ------------ | ------------ | ------------ |
+| cardId |  |  |
+
+**Query:**
+
+| name | value | required | desc |
+| ------------ | ------------ | ------------ | ------------ |
+| email |  | YES |  |
+
+
+
+> RESPONSE
+
+**Headers:**
+
+| name | value | required | desc |
+| ------------ | ------------ | ------------ | ------------ |
+| content-type | application/json;charset=UTF-8 | NO |  |
+
+**Body:**
+
+| name | type | desc |
+| ------------ | ------------ | ------------ |
+| accountEmail | string |  |
+| accountStatus | string |  |
+| contractId | string |  |
+| cards | array |  |
+| &ensp;&ensp;&#124;─ | object |  |
+| &ensp;&ensp;&ensp;&ensp;&#124;─cardId | integer |  |
+| &ensp;&ensp;&ensp;&ensp;&#124;─cardMarkedVisibleNumber | string |  |
+| &ensp;&ensp;&ensp;&ensp;&#124;─status | string |  |
+| &ensp;&ensp;&ensp;&ensp;&#124;─contractId | string |  |
+| &ensp;&ensp;&ensp;&ensp;&#124;─accountEmail | string |  |
+
+**Response Demo:**
+
+```json
+{
+  "accountEmail": "",
+  "accountStatus": "",
+  "contractId": "",
+  "cards": [
+    {
+      "cardId": 0,
+      "cardMarkedVisibleNumber": "",
+      "status": "",
+      "contractId": "",
+      "accountEmail": ""
+    }
+  ]
+}
+```
+
+
+
+
+---
+## changeCardStatus
+
+> BASIC
+
+**Path:** /v1/cards/{cardId}/status
+
+**Method:** PATCH
+
+> REQUEST
+
+**Path Params:**
+
+| name | value | desc |
+| ------------ | ------------ | ------------ |
+| cardId |  |  |
+
+**Headers:**
+
+| name | value | required | desc |
+| ------------ | ------------ | ------------ | ------------ |
+| Content-Type | application/json | YES |  |
+
+**Request Body:**
+
+| name | type | desc |
+| ------------ | ------------ | ------------ |
+| status | string |  |
+
+**Request Demo:**
+
+```json
+{
+  "status": ""
+}
+```
+
+
+
+> RESPONSE
+
+**Headers:**
+
+| name | value | required | desc |
+| ------------ | ------------ | ------------ | ------------ |
+| content-type | application/json;charset=UTF-8 | NO |  |
+
+**Body:**
+
+| name | type | desc |
+| ------------ | ------------ | ------------ |
+| cardId | integer |  |
+| cardMarkedVisibleNumber | string |  |
+| status | string |  |
+| contractId | string |  |
+| accountEmail | string |  |
+
+**Response Demo:**
+
+```json
+{
+  "cardId": 0,
+  "cardMarkedVisibleNumber": "",
+  "status": "",
+  "contractId": "",
+  "accountEmail": ""
+}
+```
+
 
 
