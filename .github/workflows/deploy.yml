@@ -1,0 +1,76 @@
+name: Build and Deploy to AWS
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: myapp
+  CONTAINER_NAME: myapp-container
+  CLUSTER_NAME: myapp-cluster
+  SERVICE_NAME: myapp-service
+
+jobs:
+  build-push-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write  # OIDC身份验证需要
+
+    steps:
+      # 1. 检出代码
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. 配置AWS认证 (OIDC)
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # 3. 登录ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # 4. 设置Java
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      # 5. Maven构建
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      # 6. 构建Docker镜像
+      - name: Build Docker image
+        run: |
+          docker build -t $ECR_REPOSITORY:$GITHUB_SHA .
+          docker tag $ECR_REPOSITORY:$GITHUB_SHA ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:$GITHUB_SHA
+
+      # 7. 推送到ECR
+      - name: Push image to Amazon ECR
+        run: docker push ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:$GITHUB_SHA
+
+      # 8. 部署到AWS
+      - name: Deploy to ECS
+        run: |
+          TASK_DEF_ARN=$(aws ecs describe-task-definition --task-definition $CONTAINER_NAME | jq '.taskDefinition.taskDefinitionArn' -r)
+          NEW_TASK_DEF_ARN=$(aws ecs register-task-definition \
+            --family $CONTAINER_NAME \
+            --container-definitions "$(aws ecs describe-task-definition --task-definition $CONTAINER_NAME | \
+              jq '.taskDefinition.containerDefinitions' | \
+              jq --arg IMAGE "$IMAGE_URI" '.[0].image = $IMAGE')" | \
+              jq '.taskDefinition.taskDefinitionArn' -r)
+          
+          aws ecs update-service \
+            --cluster $CLUSTER_NAME \
+            --service $SERVICE_NAME \
+            --task-definition $NEW_TASK_DEF_ARN \
+            --force-new-deployment
+        env:
+          IMAGE_URI: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
