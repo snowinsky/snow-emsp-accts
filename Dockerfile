@@ -3,8 +3,6 @@ FROM eclipse-temurin:11-jdk-alpine
 RUN mkdir "/opt/myapp"
 WORKDIR "/opt/myapp"
 
-RUN mvn clean package -DskipTests
-
 COPY target/*.jar /opt/myapp/app-emsp-accts.jar
 
 RUN apk add --no-cache tzdata && \
