@@ -14,15 +14,26 @@ It is a spring-boot application with the RESTFull API.
 
 
 #### AWS
+> The application is deployed on AWS EC2 instance.
+> But it is without the load balance and DNS configuration.
+> So it has to be accessed by the public IP address.
+> 
+> We can find the public IP from ECS=>Cluster=>Task=>Network=>Public IP
+> 
+> 
 - health check
-  - http://13.48.134.74:8080/health
+  - http://13.49.227.228:8080/health
 - swagger
-  - http://13.48.134.74:8080/swagger-ui.html
+  - http://13.49.227.228:8080/swagger-ui.html
 - mysql emsp-accts.c1ucqq8ik15m.eu-north-1.rds.amazonaws.com:3306/emsp-accts
   - username: rootmysql
   - password: Root-mysql
 
 #### Azure
+> The application is deployed on Azure Web App Service.
+> 
+> We can find the domain DNS from Azure Portal=>App Services=>emsp-accts-2=>Overview=>Default Domain URL
+
 - health check
   - https://emsp-accts-2-hfa5a5bdfhetfmat.canadacentral-01.azurewebsites.net/health
 - swagger
