@@ -15,14 +15,18 @@ It is a spring-boot application with the RESTFull API.
 
 #### AWS
 - health check
-  http://13.48.134.74:8080/health
+  - http://13.48.134.74:8080/health
 - swagger
-  http://13.48.134.74:8080/swagger-ui/index.html
+  - http://13.48.134.74:8080/swagger-ui.html
 - mysql emsp-accts.c1ucqq8ik15m.eu-north-1.rds.amazonaws.com:3306/emsp-accts
   - username: rootmysql
   - password: Root-mysql
 
 #### Azure
+- health check
+  - https://emsp-accts-2-hfa5a5bdfhetfmat.canadacentral-01.azurewebsites.net/health
+- swagger
+  - https://emsp-accts-2-hfa5a5bdfhetfmat.canadacentral-01.azurewebsites.net/swagger-ui.html
 - mysql emsp-accts-mysql-server.mysql.database.azure.com:3306/emsp_accts
   - username: rootmysql
   - password: Root-mysql
