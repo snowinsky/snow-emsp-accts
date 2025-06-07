@@ -32,32 +32,4 @@ public class EMAIDValidator {
         return (removedHyphens.length() == 15) ? removedHyphens.substring(0, 14) : removedHyphens;
     }
 
-    // 测试用例
-    public static void main(String[] args) {
-        String[] testEmails = {
-                "DE-123-4567890",      // ✅ 有效输入 -> 规范化: DE1234567890
-                "DE-123-4567890-1",      // ✅ 有效输入 -> 规范化: DE1234567890
-                "DE-123-4567890-2",      // ✅ 有效输入 -> 规范化: DE1234567890
-                "DE-123-012345678-2",      // ✅ 有效输入 -> 规范化: DE1234567890
-                "de-123-012345678-2",      // ✅ 有效输入 -> 规范化: DE1234567890
-                "DE-123-012345678",      // ✅ 有效输入 -> 规范化: DE1234567890
-                "de-123-4567890",      // ✅ 有效输入 -> 规范化: DE1234567890
-                "frx9j3k7xyz12345",    // ✅ 有效输入 -> 规范化: FRX9J3K7XYZ12345
-                "CNTECH5EV-SERIAL123",  // ✅ 有效输入 -> 规范化: CNTECHEVSERIAL12
-                "US12!45XXX",           // ❌ 无效（含非法字符）
-                "DE123"                 // ❌ 无效（长度不足）
-        };
-
-        for (String emaid : testEmails) {
-            System.out.println("输入: " + emaid);
-            if (isValidInput(emaid)) {
-                String normalized = normalize(emaid);
-                System.out.println("规范化结果: " + normalized);
-                System.out.println("是否符合Hubject标准: " + isNormalized(normalized));
-            } else {
-                System.out.println("❌ 无效格式");
-            }
-            System.out.println("------");
-        }
-    }
 }
