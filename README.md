@@ -11,12 +11,19 @@ It is a spring-boot application with the RESTFull API.
 
 #### github 
   https://github.com/snowinsky/snow-emsp-accts.git
+
+
 #### AWS
 - health check
   http://13.48.134.74:8080/health
 - swagger
   http://13.48.134.74:8080/swagger-ui/index.html
 - mysql emsp-accts.c1ucqq8ik15m.eu-north-1.rds.amazonaws.com:3306/emsp-accts
+  - username: rootmysql
+  - password: Root-mysql
+
+#### Azure
+- mysql emsp-accts-mysql-server.mysql.database.azure.com:3306/emsp_accts
   - username: rootmysql
   - password: Root-mysql
 
