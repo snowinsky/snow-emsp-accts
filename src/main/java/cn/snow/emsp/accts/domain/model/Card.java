@@ -21,6 +21,7 @@ public class Card {
     private CardId cardId;
     private ContractId contractId;
     private AccountEmail accountEmail;
+    @Setter
     private CardStatus status;
     private LocalDateTime lastUpdated;
     @Getter
@@ -34,28 +35,19 @@ public class Card {
     }
 
     public void assignTo(Account account) {
-        if (this.status != CardStatus.CREATED) {
-            throw new IllegalStateException("Card must be in CREATED state");
-        }
+        this.status.assign(this, account);
         this.contractId = account.getContractId();
         this.accountEmail = account.getEmail();
-        this.status = CardStatus.ASSIGNED;
         this.lastUpdated = LocalDateTime.now();
     }
 
     public void activate() {
-        if (this.status != CardStatus.ASSIGNED) {
-            throw new IllegalStateException("Card must be assigned first");
-        }
-        this.status = CardStatus.ACTIVATED;
+        this.status.activate(this);
         this.lastUpdated = LocalDateTime.now();
     }
 
     public void deactivate() {
-        if (this.status != CardStatus.ACTIVATED) {
-            throw new IllegalStateException("Card must be activated");
-        }
-        this.status = CardStatus.DEACTIVATED;
+        this.status.deactivate(this);
         this.lastUpdated = LocalDateTime.now();
     }
 

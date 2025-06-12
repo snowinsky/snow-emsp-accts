@@ -24,10 +24,10 @@ public class Account {
     private final ContractId contractId;
     private final LocalDateTime createdAt;
     private final Set<Card> cards = new HashSet<>();
+    @Setter
     private AccountStatus status;
     private LocalDateTime lastUpdated;
     @Setter
-    @Getter
     private Integer version;
 
     public Account(AccountEmail email, ContractId contractId) {
@@ -39,21 +39,15 @@ public class Account {
     }
 
     public void activate() {
-        if (this.status != AccountStatus.CREATED) {
-            throw new IllegalStateException("Account must be in CREATED state");
-        }
-        this.status = AccountStatus.ACTIVATED;
+        this.status.activate(this);
         this.lastUpdated = LocalDateTime.now();
     }
 
     public void deactivate() {
-        if (this.status != AccountStatus.ACTIVATED) {
-            throw new IllegalStateException("Account must be activated");
-        }
+        this.status.deactivated(this);
         for (Card card : cards) {
             card.deactivate();
         }
-        this.status = AccountStatus.DEACTIVATED;
         this.lastUpdated = LocalDateTime.now();
     }
 
